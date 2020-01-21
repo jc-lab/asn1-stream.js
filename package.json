@@ -1,0 +1,38 @@
+{
+  "name": "asn1-stream",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jc-lab/asn1-stream.js.git"
+  },
+  "keywords": [
+    "asn1-stream",
+    "asn1",
+    "asn1.js",
+    "asnjs"
+  ],
+  "author": {
+    "name": "Joseph Lee",
+    "email": "development@jc-lab.net"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jc-lab/asn1-stream.js/issues"
+  },
+  "homepage": "https://github.com/jc-lab/asn1-stream.js#readme",
+  "dependencies": {
+    "@fidm/asn1": "^1.0.4",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.8"
+  }
+}
