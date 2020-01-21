@@ -19,7 +19,7 @@ import ReadBuffer from './read-buffer';
 
 import { Int10 } from './int10'
 
-import { ASN1 } from '@fidm/asn1';
+import * as Asn1Js from 'asn1js';
 
 enum ParseStep {
     READ_TAG_BEGIN ,
@@ -54,7 +54,7 @@ class ParseContext {
 }
 
 export interface IAsn1Reader {
-    on(event: "data", listener: (chunk: Buffer | ASN1) => void): this;
+    on(event: "data", listener: (chunk: Buffer | Asn1Js.Any) => void): this;
 }
 export class Asn1Reader extends streams.Transform implements IAsn1Reader {
     private _position: number = 0;
@@ -202,9 +202,9 @@ export class Asn1Reader extends streams.Transform implements IAsn1Reader {
     }
 
     private _onTagRead() {
-        const buffer = Buffer.from(Uint8Array.from(this._parseContextStack[0].tagBuffer));
-        const asn1 = ASN1.fromDER(buffer, true);
-        this.push(asn1);
+        const ber = Uint8Array.from(this._parseContextStack[0].tagBuffer).buffer;
+        const data = Asn1Js.fromBER(ber);
+        this.push(data);
     }
 
     _write(chunk: any, encoding: string, callback: (error?: (Error | null)) => void): void {

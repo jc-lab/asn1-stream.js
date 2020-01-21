@@ -1,7 +1,7 @@
 {
   "name": "asn1-stream",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "ASN1 parser with a stream interface",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -16,7 +16,8 @@
     "asn1-stream",
     "asn1",
     "asn1.js",
-    "asnjs"
+    "asn1js",
+    "stream"
   ],
   "author": {
     "name": "Joseph Lee",
@@ -28,11 +29,12 @@
   },
   "homepage": "https://github.com/jc-lab/asn1-stream.js#readme",
   "dependencies": {
-    "@fidm/asn1": "^1.0.4",
-    "tsc": "^1.20150623.0",
-    "typescript": "^3.7.5"
+    "asn1js": "^2.0.26"
   },
   "devDependencies": {
-    "@types/node": "^13.1.8"
+    "@types/asn1js": "0.0.1",
+    "@types/node": "^13.1.8",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.7.5"
   }
 }
