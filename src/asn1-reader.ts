@@ -20,6 +20,7 @@ import ReadBuffer from './read-buffer';
 import { Int10 } from './int10'
 
 import * as Asn1Js from 'asn1js';
+import {LocalBaseBlock} from "asn1js";
 
 enum ParseStep {
     READ_TAG_BEGIN ,
@@ -53,8 +54,9 @@ class ParseContext {
     }
 }
 
+export type Asn1ParseResult = { offset: number; result: LocalBaseBlock };
 export interface IAsn1Reader {
-    on(event: "data", listener: (chunk: Buffer | Asn1Js.Any) => void): this;
+    on(event: "data", listener: (chunk: Buffer | Asn1ParseResult) => void): this;
 }
 export class Asn1Reader extends streams.Transform implements IAsn1Reader {
     private _position: number = 0;
