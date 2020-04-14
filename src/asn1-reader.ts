@@ -154,6 +154,14 @@ export class Asn1Reader extends streams.Transform implements IAsn1Reader {
     }
   }
 
+  private _getTagBuffer(parseContext: ParseContext): number[] {
+    if ((this._opts.stripSequence && (parseContext.depth <= 1)) || (parseContext.depth === 0)) {
+      return parseContext.tagBuffer;
+    }else {
+      return this._getTagBuffer(parseContext.parent as ParseContext);
+    }
+  }
+
   private _parse(readBuffer: ReadBuffer) {
     while (readBuffer.remaining !== 0) {
       if (this._passthrough) {
@@ -171,7 +179,8 @@ export class Asn1Reader extends streams.Transform implements IAsn1Reader {
       case ParseStep.READ_TAG_BEGIN:
         if (readBuffer.remaining >= 1) {
           let buf = readBuffer.readUInt8();
-          parseContext.tagBuffer = [buf];
+          parseContext.tagBuffer = [];
+          this._getTagBuffer(parseContext).push(buf);
           parseContext.tagClass = buf >> 6;
           parseContext.tagConstructed = ((buf & 0x20) !== 0);
           parseContext.tagNumber = buf & 0x1F;
@@ -192,7 +201,7 @@ export class Asn1Reader extends streams.Transform implements IAsn1Reader {
           let buf: number;
           do {
             buf = readBuffer.readUInt8();
-            parseContext.tagBuffer.push(buf);
+            this._getTagBuffer(parseContext).push(buf);
             parseContext.tagTempInt10.mulAdd(128, buf & 0x7F);
           } while ((readBuffer.remaining > 0) && (buf & 0x80));
           if ((buf & 0x80) === 0) {
@@ -210,7 +219,7 @@ export class Asn1Reader extends streams.Transform implements IAsn1Reader {
           const buf = readBuffer.readUInt8();
           const len = buf & 0x7F;
 
-          parseContext.tagBuffer.push(buf);
+          this._getTagBuffer(parseContext).push(buf);
 
           if (parseContext.tagNumber === 0 && len === 0) {
             this._tagReadDone(parseContext);
@@ -250,7 +259,7 @@ export class Asn1Reader extends streams.Transform implements IAsn1Reader {
         if (readBuffer.remaining > 0) {
           while ((readBuffer.remaining > 0) && (parseContext.tagLenRemaining > 0)) {
             const buf = readBuffer.readUInt8();
-            parseContext.tagBuffer.push(buf);
+            this._getTagBuffer(parseContext).push(buf);
             parseContext.tagTempInt10.mulAdd(256, buf);
             parseContext.tagLenRemaining--;
           }
@@ -281,7 +290,7 @@ export class Asn1Reader extends streams.Transform implements IAsn1Reader {
         if (readBuffer.remaining > 0) {
           let remainTagContent = parseContext.tagLength - parseContext.tagWrittenLength;
           let avail = readBuffer.remaining < remainTagContent ? readBuffer.remaining : remainTagContent;
-          readBuffer.readBufferTo(parseContext.tagBuffer, avail);
+          readBuffer.readBufferTo(this._getTagBuffer(parseContext), avail);
           parseContext.tagWrittenLength += avail;
           if (parseContext.tagWrittenLength == parseContext.tagLength) {
             this._tagReadDone(parseContext);
