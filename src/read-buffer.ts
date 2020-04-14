@@ -183,6 +183,7 @@ export default class ReadBuffer {
         }else{
             buffer.push(...this._buffer.subarray(this._offset, this._offset + length).toJSON().data);
         }
+        if(this._afterReadHandler) this._afterReadHandler(length);
         this._offset += length;
     }
 
