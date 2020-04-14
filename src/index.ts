@@ -1,1 +1,1 @@
-export * from './asn1-reader'
+export * from './asn1-reader';

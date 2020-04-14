@@ -23,8 +23,13 @@ module.exports = {
     'generator-star-spacing': 0,
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
-    'semi': 0,
+    'semi': ['error', 'always'],
+    'quotes': ['error', 'single'],
+    'indent': ['error', 2],
+    '@typescript-eslint/indent': ['error', 2, {"SwitchCase": 0}],
+    'space-before-blocks': ['error', 'always'],
+    'keyword-spacing': ['error', {before: true, after: true}],
     'no-unused-vars': 'off',
-    'no-fallthrough': 'off'
+    'no-fallthrough': 'off',
   }
 }
