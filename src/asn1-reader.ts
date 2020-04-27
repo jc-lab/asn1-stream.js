@@ -95,6 +95,7 @@ export interface IAsn1ReaderOptions {
 
 export interface Asn1SequenceResult {
   ber: boolean;
+  raw: Buffer;
   size: number;
 }
 
@@ -157,7 +158,7 @@ export class Asn1Reader extends streams.Transform implements IAsn1Reader {
   private _getTagBuffer(parseContext: ParseContext): number[] {
     if ((this._opts.stripSequence && (parseContext.depth <= 1)) || (parseContext.depth === 0)) {
       return parseContext.tagBuffer;
-    }else {
+    } else {
       return this._getTagBuffer(parseContext.parent as ParseContext);
     }
   }
@@ -316,7 +317,8 @@ export class Asn1Reader extends streams.Transform implements IAsn1Reader {
     if (this._opts.stripSequence && parseDepth == 0) {
       const result: Asn1SequenceResult = {
         ber: parseContext.tagLength === 0,
-        size: (parseContext.tagLength > 0) ? (parseContext.tagTotalReadLength + parseContext.tagLength) : 0
+        size: (parseContext.tagLength > 0) ? (parseContext.tagTotalReadLength + parseContext.tagLength) : 0,
+        raw: Buffer.from(parseContext.tagBuffer)
       };
       this.emit('begin-sequence', result);
     }
@@ -332,7 +334,8 @@ export class Asn1Reader extends streams.Transform implements IAsn1Reader {
         const parseContext = this._parseContextStack[0];
         const result: Asn1SequenceResult = {
           ber: parseContext.tagLength === 0,
-          size: parseContext.tagTotalReadLength
+          size: parseContext.tagTotalReadLength,
+          raw: Buffer.alloc(0)
         };
         this.emit('end-sequence', result);
       }
