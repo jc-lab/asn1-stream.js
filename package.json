@@ -5,8 +5,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "tsc": "tsc",
+    "test": "npm run test:lint",
+    "test:lint": "eslint --ext \".js,.ts\" ./src",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "npm run test && npm run build"
   },
   "repository": {
     "type": "git",
