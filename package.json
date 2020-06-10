@@ -8,6 +8,7 @@
     "tsc": "tsc",
     "test": "npm run test:lint",
     "test:lint": "eslint --ext \".js,.ts\" ./src",
+    "lint:fix": "eslint --ext \".js,.ts\" --fix ./src",
     "build": "tsc",
     "prepublish": "npm run test && npm run build"
   },
