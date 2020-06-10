@@ -369,6 +369,13 @@ export class Asn1Reader extends streams.Transform implements IAsn1Reader {
     } else {
       this._parse(readBuffer);
     }
-    callback();
+    const doCallback = () => {
+      if (this.isPaused()) {
+        setImmediate(doCallback);
+      } else {
+        callback();
+      }
+    };
+    doCallback();
   }
 }
